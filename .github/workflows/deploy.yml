@@ -8,24 +8,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
-      SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
-      SDF_CONSUMER_SECRET: ${{ secrets.SDF_CONSUMER_SECRET }}
-      SDF_TOKEN_ID: ${{ secrets.SDF_TOKEN_ID }}
-      SDF_TOKEN_SECRET: ${{ secrets.SDF_TOKEN_SECRET }}
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Install Dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Deploy to NetSuite
-        run: node deploy-script.js
+    - name: Run NetSuite Deployer
+      run: node deploy-script.js
+      env:
+        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
+        SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
+        SDF_CONSUMER_SECRET: ${{ secrets.SDF_CONSUMER_SECRET }}
+        SDF_TOKEN_ID: ${{ secrets.SDF_TOKEN_ID }}
+        SDF_TOKEN_SECRET: ${{ secrets.SDF_TOKEN_SECRET }
