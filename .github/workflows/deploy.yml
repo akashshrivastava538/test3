@@ -1,10 +1,8 @@
-name: Deploy to NetSuite (Token-Based)
+name: Deploy to NetSuite (Docker)
 
 on:
   push:
     branches: [main, develop]
-  pull_request:
-    branches: [main]
 
 jobs:
   deploy:
@@ -13,35 +11,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install SuiteCloud CLI (Legacy Version)
-      run: npm install -g @oracle/suitecloud-cli@1.9.0 --acceptsuitecloudsdklicense
-    
-    - name: Set up authentication (Interactive)
+    - name: Deploy using NetSuite REST API
       run: |
-        # Create authentication configuration file
-        mkdir -p ~/.suitecloud
-        cat > ~/.suitecloud/credentials.json << EOF
-        {
-          "accountId": "${{ secrets.NETSUITE_ACCOUNT_ID }}",
-          "authIds": {
-            "github-actions": {
-              "accountId": "${{ secrets.NETSUITE_ACCOUNT_ID }}",
-              "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
-              "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
-              "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
-              "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
-            }
-          }
-        }
-        EOF
-    
-    - name: Validate Project
-      run: suitecloud project:validate
-    
-    - name: Deploy to NetSuite
-      run: suitecloud project:deploy --authid github-actions
+        # Use Node.js script to deploy via REST API
+        node deploy-script.js
+      env:
+        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
+        SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
+        SDF_CONSUMER_SECRET: ${{ secrets.SDF_CONSUMER_SECRET }}
+        SDF_TOKEN_ID: ${{ secrets.SDF_TOKEN_ID }}
+        SDF_TOKEN_SECRET: ${{ secrets.SDF_TOKEN_SECRET }}
