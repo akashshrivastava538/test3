@@ -20,18 +20,24 @@ jobs:
       - name: Install SuiteCloud CLI (accept license)
         run: npm install -g @oracle/suitecloud-cli --acceptsuitecloudsdklicense
 
-      - name: Deploy to NetSuite
-        env:
-          SDF_CONSUMER_KEY: ${{ secrets.NS_CONSUMER_KEY }}
-          SDF_CONSUMER_SECRET: ${{ secrets.NS_CONSUMER_SECRET }}
-          SDF_TOKEN_ID: ${{ secrets.NS_TOKEN_ID }}
-          SDF_TOKEN_SECRET: ${{ secrets.NS_TOKEN_SECRET }}
-          SDF_ACCOUNT: ${{ secrets.NS_ACCOUNT }}
+      - name: Configure NetSuite Authentication
         run: |
-          suitecloud account:setup --authid github-auth \
-            --account $SDF_ACCOUNT \
-            --tokenid $SDF_TOKEN_ID \
-            --tokensecret $SDF_TOKEN_SECRET \
-            --consumerkey $SDF_CONSUMER_KEY \
-            --consumersecret $SDF_CONSUMER_SECRET
-          suitecloud project:deploy --authid github-auth
+          mkdir -p ~/.suitecloud
+          cat <<EOF > ~/.suitecloud/config.json
+          {
+            "defaultAuthId": "github-auth",
+            "auths": {
+              "github-auth": {
+                "account": "${{ secrets.NS_ACCOUNT }}",
+                "authType": "token",
+                "tokenId": "${{ secrets.NS_TOKEN_ID }}",
+                "tokenSecret": "${{ secrets.NS_TOKEN_SECRET }}",
+                "consumerKey": "${{ secrets.NS_CONSUMER_KEY }}",
+                "consumerSecret": "${{ secrets.NS_CONSUMER_SECRET }}"
+              }
+            }
+          }
+          EOF
+
+      - name: Deploy to NetSuite
+        run: suitecloud project:deploy
