@@ -15,8 +15,10 @@ class NetSuiteDeployer {
             throw new Error('Missing required environment variables. Please check your GitHub secrets.');
         }
         
-        this.baseUrl = `https://${this.accountId}.suitetalk.api.netsuite.com`;
-        console.log(`Initialized deployer for account: ${this.accountId}`);
+       // this.baseUrl = `https://${this.accountId}.suitetalk.api.netsuite.com`;
+       this.baseUrl = `https://${this.accountId.toLowerCase().replace('_', '-')}.suitetalk.api.netsuite.com`;
+
+       console.log(`Initialized deployer for account: ${this.accountId}`);
     }
 
     generateOAuthHeader(url, method, body = '') {
