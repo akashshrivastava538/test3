@@ -9,8 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+
+      - name: Verify project files & configs
+        run: |
+          echo "Listing repository files:"
+          ls -R .
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -39,8 +43,9 @@ jobs:
           }
           EOF
 
-      - name: Link Project to NetSuite Auth
-        run: echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
+      - name: Link Project to NetSuite
+        run: |
+          echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
 
       - name: Deploy to NetSuite
         run: suitecloud project:deploy
