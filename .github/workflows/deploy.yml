@@ -1,4 +1,4 @@
-name: Deploy to NetSuite (Docker)
+name: Deploy to NetSuite
 
 on:
   push:
@@ -11,10 +11,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Deploy using NetSuite REST API
-      run: |
-        # Use Node.js script to deploy via REST API
-        node deploy-script.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Deploy to NetSuite
+      run: node deploy-script.js
       env:
         NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
         SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
