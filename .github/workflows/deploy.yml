@@ -12,6 +12,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      SDF_ACCOUNT_ID: ${{ secrets.SDF_ACCOUNT_ID }}
+      SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
+      SDF_CONSUMER_SECRET: ${{ secrets.SDF_CONSUMER_SECRET }}
+      SDF_TOKEN_ID: ${{ secrets.SDF_TOKEN_ID }}
+      SDF_TOKEN_SECRET: ${{ secrets.SDF_TOKEN_SECRET }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,28 +34,30 @@ jobs:
       - name: Configure NetSuite Authentication
         run: |
           mkdir -p ~/.suitecloud
-          echo '{' > ~/.suitecloud/config.json
-          echo '  "defaultAuthId": "default",' >> ~/.suitecloud/config.json
-          echo '  "auths": {' >> ~/.suitecloud/config.json
-          echo '    "default": {' >> ~/.suitecloud/config.json
-          echo '      "account": "'${{ secrets.SDF_ACCOUNT_ID }}'",' >> ~/.suitecloud/config.json
-          echo '      "authType": "token",' >> ~/.suitecloud/config.json
-          echo '      "tokenId": "'${{ secrets.SDF_TOKEN_ID }}'",' >> ~/.suitecloud/config.json
-          echo '      "tokenSecret": "'${{ secrets.SDF_TOKEN_SECRET }}'",' >> ~/.suitecloud/config.json
-          echo '      "consumerKey": "'${{ secrets.SDF_CONSUMER_KEY }}'",' >> ~/.suitecloud/config.json
-          echo '      "consumerSecret": "'${{ secrets.SDF_CONSUMER_SECRET }}'"' >> ~/.suitecloud/config.json
-          echo '    }' >> ~/.suitecloud/config.json
-          echo '  }' >> ~/.suitecloud/config.json
-          echo '}' >> ~/.suitecloud/config.json
+          cat > ~/.suitecloud/config.json <<EOF
+{
+  "defaultAuthId": "default",
+  "auths": {
+    "default": {
+      "account": "${SDF_ACCOUNT_ID}",
+      "authType": "token",
+      "tokenId": "${SDF_TOKEN_ID}",
+      "tokenSecret": "${SDF_TOKEN_SECRET}",
+      "consumerKey": "${SDF_CONSUMER_KEY}",
+      "consumerSecret": "${SDF_CONSUMER_SECRET}"
+    }
+  }
+}
+EOF
 
       - name: Link Project to NetSuite
         run: echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
 
-      - name: Debug: Show auth + config files
+      - name: Debug: Show config files
         run: |
-          echo ">>> .suitecloudrc.json:"
+          echo ".suitecloudrc.json:"
           cat .suitecloudrc.json
-          echo ">>> config.json:"
+          echo "config.json:"
           cat ~/.suitecloud/config.json
           suitecloud account:list
 
