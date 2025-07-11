@@ -39,5 +39,14 @@ jobs:
           }
           EOF
 
+      - name: Link Project to Auth ID
+        run: |
+          mkdir -p .cli
+          cat <<EOF > .cli/cli-config.json
+          {
+            "defaultAuthId": "default"
+          }
+          EOF
+
       - name: Deploy to NetSuite
         run: suitecloud project:deploy
