@@ -1,4 +1,4 @@
-name: Deploy to NetSuite
+name: Deploy to NetSuite (Token-Based)
 
 on:
   push:
@@ -18,22 +18,30 @@ jobs:
       with:
         node-version: '18'
     
-    - name: Install SuiteCloud CLI
-      run: npm install -g @oracle/suitecloud-cli --acceptsuitecloudsdklicense
+    - name: Install SuiteCloud CLI (Legacy Version)
+      run: npm install -g @oracle/suitecloud-cli@1.9.0 --acceptsuitecloudsdklicense
     
-    - name: Authenticate with NetSuite
+    - name: Set up authentication (Interactive)
       run: |
-        suitecloud account:setup \
-          --account ${{ secrets.NETSUITE_ACCOUNT_ID }} \
-          --authid ${{ secrets.SDF_CONSUMER_KEY }} \
-          --tokenid ${{ secrets.SDF_TOKEN_ID }} \
-          --tokensecret ${{ secrets.SDF_TOKEN_SECRET }}
+        # Create authentication configuration file
+        mkdir -p ~/.suitecloud
+        cat > ~/.suitecloud/credentials.json << EOF
+        {
+          "accountId": "${{ secrets.NETSUITE_ACCOUNT_ID }}",
+          "authIds": {
+            "github-actions": {
+              "accountId": "${{ secrets.NETSUITE_ACCOUNT_ID }}",
+              "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
+              "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
+              "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
+              "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
+            }
+          }
+        }
+        EOF
     
     - name: Validate Project
       run: suitecloud project:validate
     
     - name: Deploy to NetSuite
-      run: suitecloud project:deploy
-      env:
-        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
-        SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
+      run: suitecloud project:deploy --authid github-actions
