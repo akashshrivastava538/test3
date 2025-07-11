@@ -1,51 +1,20 @@
-name: Deploy to NetSuite
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Verify project files & configs
-        run: |
-          echo "Listing repository files:"
-          ls -R .
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install SuiteCloud CLI (accept license)
-        run: npm install -g @oracle/suitecloud-cli --acceptsuitecloudsdklicense
-
-      - name: Configure NetSuite Authentication
-        run: |
-          mkdir -p ~/.suitecloud
-          cat <<EOF > ~/.suitecloud/config.json
-          {
-            "defaultAuthId": "default",
-            "auths": {
-              "default": {
-                "account": "${{ secrets.SDF_ACCOUNT_ID }}",
-                "authType": "token",
-                "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
-                "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
-                "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
-                "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
-              }
-            }
-          }
-          EOF
-
       - name: Link Project to NetSuite
         run: |
           echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
+
+      - name: Debug auth and project config
+        run: |
+          echo ">>> Listing ~/.suitecloud/config.json"
+          cat ~/.suitecloud/config.json
+
+          echo ">>> Listing .suitecloudrc.json"
+          cat .suitecloudrc.json
+
+          echo ">>> Listing files in project root"
+          ls -a .
+
+          echo ">>> Checking available SuiteCloud auth accounts"
+          suitecloud account:list
 
       - name: Deploy to NetSuite
         run: suitecloud project:deploy
