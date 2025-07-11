@@ -4,17 +4,16 @@ on:
   push:
     branches: [main]
 
+defaults:
+  run:
+    working-directory: netsuite-github-integration
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Verify project files & configs
-        run: |
-          echo "Listing repository files:"
-          ls -R .
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -47,18 +46,12 @@ jobs:
         run: |
           echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
 
-      - name: Debug auth and project config
+      - name: Debug: Show auth + config files
         run: |
-          echo ">>> Listing ~/.suitecloud/config.json"
-          cat ~/.suitecloud/config.json
-
-          echo ">>> Listing .suitecloudrc.json"
+          echo ">>> .suitecloudrc.json:"
           cat .suitecloudrc.json
-
-          echo ">>> Listing files in project root"
-          ls -a .
-
-          echo ">>> Checking available SuiteCloud auth accounts"
+          echo ">>> config.json:"
+          cat ~/.suitecloud/config.json
           suitecloud account:list
 
       - name: Deploy to NetSuite
