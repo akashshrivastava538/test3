@@ -255,7 +255,7 @@ async function main() {
     try {
         console.log('NetSuite Deployment Script Starting...');
         console.log('Environment check:');
-        console.log('- NETSUITE_ACCOUNT_ID:', process.env.SDF_ACCOUNT_ID ? 'Set' : 'Missing');
+        console.log('- NETSUITE_ACCOUNT_ID:', process.env.NETSUITE_ACCOUNT_ID ? 'Set' : 'Missing');
         console.log('- SDF_CONSUMER_KEY:', process.env.SDF_CONSUMER_KEY ? 'Set' : 'Missing');
         console.log('- SDF_CONSUMER_SECRET:', process.env.SDF_CONSUMER_SECRET ? 'Set' : 'Missing');
         console.log('- SDF_TOKEN_ID:', process.env.SDF_TOKEN_ID ? 'Set' : 'Missing');
