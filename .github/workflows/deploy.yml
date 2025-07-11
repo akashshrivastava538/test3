@@ -31,4 +31,4 @@ jobs:
             --consumersecret ${{ secrets.NS_CONSUMER_SECRET }}
 
       - name: Deploy to NetSuite
-        run: suitecloud project:deploy --authid github-auth
+        run: suitecloud project:deploy
