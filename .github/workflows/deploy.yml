@@ -1,0 +1,34 @@
+name: Deploy to NetSuite
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install SuiteCloud CLI
+        run: npm install -g @oracle/suitecloud-cli
+
+      - name: Set Up Authentication
+        run: |
+          suitecloud account:savetokenauth \
+            --authid github-auth \
+            --account ${{ secrets.SDF_ACCOUNT_ID }} \
+            --tokenid ${{ secrets.SDF_TOKEN_ID }} \
+            --tokensecret ${{ secrets.SDF_TOKEN_SECRET }} \
+            --consumerkey ${{ secrets.SDF_CONSUMER_KEY }} \
+            --consumersecret ${{ secrets.SDF_CONSUMER_SECRET }}
+
+      - name: Deploy to NetSuite
+        run: suitecloud project:deploy --authid github-auth
