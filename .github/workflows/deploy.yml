@@ -2,42 +2,38 @@ name: Deploy to NetSuite
 
 on:
   push:
+    branches: [main, develop]
+  pull_request:
     branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install SuiteCloud CLI (accept license)
-        run: npm install -g @oracle/suitecloud-cli --acceptsuitecloudsdklicense
-
-      - name: Configure NetSuite Authentication
-        run: |
-          mkdir -p ~/.suitecloud
-          cat <<EOF > ~/.suitecloud/config.json
-          {
-            "defaultAuthId": "github-auth",
-            "auths": {
-              "github-auth": {
-                "account": "${{ secrets.SDF_ACCOUNT }}",
-                "authType": "token",
-                "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
-                "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
-                "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
-                "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
-              }
-            }
-          }
-          EOF
-
-      - name: Deploy to NetSuite
-        run: suitecloud project:deploy
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install SuiteCloud CLI
+      run: npm install -g @oracle/suitecloud-cli
+    
+    - name: Authenticate with NetSuite
+      run: |
+        suitecloud account:setup \
+          --account ${{ secrets.NETSUITE_ACCOUNT_ID }} \
+          --authid ${{ secrets.SDF_CONSUMER_KEY }} \
+          --tokenid ${{ secrets.SDF_TOKEN_ID }} \
+          --tokensecret ${{ secrets.SDF_TOKEN_SECRET }}
+    
+    - name: Validate Project
+      run: suitecloud project:validate
+    
+    - name: Deploy to NetSuite
+      run: suitecloud project:deploy
+      env:
+        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
+        SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
