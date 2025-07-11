@@ -27,20 +27,20 @@ jobs:
         run: |
           mkdir -p ~/.suitecloud
           cat <<EOF > ~/.suitecloud/config.json
-          {
-            "defaultAuthId": "default",
-            "auths": {
-              "default": {
-                "account": "${{ secrets.SDF_ACCOUNT_ID }}",
-                "authType": "token",
-                "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
-                "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
-                "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
-                "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
-              }
-            }
-          }
-          EOF
+{
+  "defaultAuthId": "default",
+  "auths": {
+    "default": {
+      "account": "${{ secrets.SDF_ACCOUNT_ID }}",
+      "authType": "token",
+      "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
+      "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
+      "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
+      "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
+    }
+  }
+}
+EOF
 
       - name: Link Project to NetSuite
         run: |
