@@ -25,9 +25,9 @@ jobs:
           mkdir -p ~/.suitecloud
           cat <<EOF > ~/.suitecloud/config.json
           {
-            "defaultAuthId": "github-auth",
+            "defaultAuthId": "default",
             "auths": {
-              "github-auth": {
+              "default": {
                 "account": "${{ secrets.SDF_ACCOUNT_ID }}",
                 "authType": "token",
                 "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
@@ -40,4 +40,4 @@ jobs:
           EOF
 
       - name: Deploy to NetSuite
-        run: suitecloud project:deploy --authid github-auth
+        run: suitecloud project:deploy
