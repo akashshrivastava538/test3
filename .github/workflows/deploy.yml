@@ -19,7 +19,7 @@ jobs:
     - name: Deploy to NetSuite
       run: node deploy-script.js
       env:
-        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUITE_ACCOUNT_ID }}
+        NETSUITE_ACCOUNT_ID: ${{ secrets.NETSUIT_SDF_ACCOUNT_ID }}
         SDF_CONSUMER_KEY: ${{ secrets.SDF_CONSUMER_KEY }}
         SDF_CONSUMER_SECRET: ${{ secrets.SDF_CONSUMER_SECRET }}
         SDF_TOKEN_ID: ${{ secrets.SDF_TOKEN_ID }}
