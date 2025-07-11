@@ -13,38 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install SuiteCloud CLI (accept license)
+      - name: Install SuiteCloud CLI
         run: npm install -g @oracle/suitecloud-cli --acceptsuitecloudsdklicense
 
       - name: Configure NetSuite Authentication
         run: |
           mkdir -p ~/.suitecloud
-          cat <<EOF > ~/.suitecloud/config.json
-{
-  "defaultAuthId": "default",
-  "auths": {
-    "default": {
-      "account": "${{ secrets.SDF_ACCOUNT_ID }}",
-      "authType": "token",
-      "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
-      "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
-      "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
-      "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
-    }
-  }
-}
-EOF
+          echo '{
+            "defaultAuthId": "default",
+            "auths": {
+              "default": {
+                "account": "'"${{ secrets.SDF_ACCOUNT_ID }}"'",
+                "authType": "token",
+                "tokenId": "'"${{ secrets.SDF_TOKEN_ID }}"'",
+                "tokenSecret": "'"${{ secrets.SDF_TOKEN_SECRET }}"'",
+                "consumerKey": "'"${{ secrets.SDF_CONSUMER_KEY }}"'",
+                "consumerSecret": "'"${{ secrets.SDF_CONSUMER_SECRET }}"'"
+              }
+            }
+          }' > ~/.suitecloud/config.json
 
       - name: Link Project to NetSuite
-        run: |
-          echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
+        run: echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
 
       - name: Debug: Show auth + config files
         run: |
