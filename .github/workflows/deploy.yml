@@ -38,12 +38,12 @@ jobs:
           echo '  "defaultAuthId": "default",' >> ~/.suitecloud/config.json
           echo '  "auths": {' >> ~/.suitecloud/config.json
           echo '    "default": {' >> ~/.suitecloud/config.json
-          echo '      "account": "'"$SDF_ACCOUNT_ID"'",' >> ~/.suitecloud/config.json
+          echo '      "account": "'"${SDF_ACCOUNT_ID}"'",' >> ~/.suitecloud/config.json
           echo '      "authType": "token",' >> ~/.suitecloud/config.json
-          echo '      "tokenId": "'"$SDF_TOKEN_ID"'",' >> ~/.suitecloud/config.json
-          echo '      "tokenSecret": "'"$SDF_TOKEN_SECRET"'",' >> ~/.suitecloud/config.json
-          echo '      "consumerKey": "'"$SDF_CONSUMER_KEY"'",' >> ~/.suitecloud/config.json
-          echo '      "consumerSecret": "'"$SDF_CONSUMER_SECRET"'"' >> ~/.suitecloud/config.json
+          echo '      "tokenId": "'"${SDF_TOKEN_ID}"'",' >> ~/.suitecloud/config.json
+          echo '      "tokenSecret": "'"${SDF_TOKEN_SECRET}"'",' >> ~/.suitecloud/config.json
+          echo '      "consumerKey": "'"${SDF_CONSUMER_KEY}"'",' >> ~/.suitecloud/config.json
+          echo '      "consumerSecret": "'"${SDF_CONSUMER_SECRET}"'"' >> ~/.suitecloud/config.json
           echo '    }' >> ~/.suitecloud/config.json
           echo '  }' >> ~/.suitecloud/config.json
           echo '}' >> ~/.suitecloud/config.json
