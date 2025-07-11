@@ -24,23 +24,20 @@ jobs:
         run: |
           mkdir -p ~/.suitecloud
           cat <<EOF > ~/.suitecloud/config.json
-{
-  "defaultAuthId": "github-auth",
-  "auths": {
-    "github-auth": {
-      "account": "${{ secrets.NS_ACCOUNT }}",
-      "authType": "token",
-      "tokenId": "${{ secrets.NS_TOKEN_ID }}",
-      "tokenSecret": "${{ secrets.NS_TOKEN_SECRET }}",
-      "consumerKey": "${{ secrets.NS_CONSUMER_KEY }}",
-      "consumerSecret": "${{ secrets.NS_CONSUMER_SECRET }}"
-    }
-  }
-}
-EOF
-
-      - name: Link Project to Auth
-        run: echo '{ "defaultAuthId": "github-auth" }' > .suitecloudrc.json
+          {
+            "defaultAuthId": "github-auth",
+            "auths": {
+              "github-auth": {
+                "account": "${{ secrets.SDF_ACCOUNT }}",
+                "authType": "token",
+                "tokenId": "${{ secrets.SDF_TOKEN_ID }}",
+                "tokenSecret": "${{ secrets.SDF_TOKEN_SECRET }}",
+                "consumerKey": "${{ secrets.SDF_CONSUMER_KEY }}",
+                "consumerSecret": "${{ secrets.SDF_CONSUMER_SECRET }}"
+              }
+            }
+          }
+          EOF
 
       - name: Deploy to NetSuite
         run: suitecloud project:deploy
