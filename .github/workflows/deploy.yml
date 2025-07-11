@@ -27,19 +27,19 @@ jobs:
       - name: Configure NetSuite Authentication
         run: |
           mkdir -p ~/.suitecloud
-          echo '{
-            "defaultAuthId": "default",
-            "auths": {
-              "default": {
-                "account": "'"${{ secrets.SDF_ACCOUNT_ID }}"'",
-                "authType": "token",
-                "tokenId": "'"${{ secrets.SDF_TOKEN_ID }}"'",
-                "tokenSecret": "'"${{ secrets.SDF_TOKEN_SECRET }}"'",
-                "consumerKey": "'"${{ secrets.SDF_CONSUMER_KEY }}"'",
-                "consumerSecret": "'"${{ secrets.SDF_CONSUMER_SECRET }}"'"
-              }
-            }
-          }' > ~/.suitecloud/config.json
+          echo '{' > ~/.suitecloud/config.json
+          echo '  "defaultAuthId": "default",' >> ~/.suitecloud/config.json
+          echo '  "auths": {' >> ~/.suitecloud/config.json
+          echo '    "default": {' >> ~/.suitecloud/config.json
+          echo '      "account": "'${{ secrets.SDF_ACCOUNT_ID }}'",' >> ~/.suitecloud/config.json
+          echo '      "authType": "token",' >> ~/.suitecloud/config.json
+          echo '      "tokenId": "'${{ secrets.SDF_TOKEN_ID }}'",' >> ~/.suitecloud/config.json
+          echo '      "tokenSecret": "'${{ secrets.SDF_TOKEN_SECRET }}'",' >> ~/.suitecloud/config.json
+          echo '      "consumerKey": "'${{ secrets.SDF_CONSUMER_KEY }}'",' >> ~/.suitecloud/config.json
+          echo '      "consumerSecret": "'${{ secrets.SDF_CONSUMER_SECRET }}'"' >> ~/.suitecloud/config.json
+          echo '    }' >> ~/.suitecloud/config.json
+          echo '  }' >> ~/.suitecloud/config.json
+          echo '}' >> ~/.suitecloud/config.json
 
       - name: Link Project to NetSuite
         run: echo '{ "defaultAuthId": "default" }' > .suitecloudrc.json
